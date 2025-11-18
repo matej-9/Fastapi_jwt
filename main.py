@@ -9,12 +9,13 @@ BANDS = [
     {'id':2, 'name':'Aphex Twin', 'genre':'Electronic'},
     {'id':3, 'name':'Wu-Tang Clan', 'genre':'Hip-Hop'},
 ]
-
-@app.get("/bands")
-async def bands()-> list[Band]:
-    return [
-        Band(**b) for b in BANDS
-    ]
+# default get function#
+#
+#@app.get("/bands")
+#async def bands()-> list[Band]:
+#    return [
+#        Band(**b) for b in BANDS
+#    ]
 
 @app.get("/bands/{band_id}")
 async def get_band(band_id: int) -> Band:
@@ -28,3 +29,12 @@ async def genre_page(genre: GenreURLChoices) -> list[dict]:
     genres = [b for b in BANDS if b['genre'].lower() == genre.value]
     return genres
 
+# creating genre with query param #
+
+@app.get("/bands")
+async def bands(genre:GenreURLChoices | None = None) -> list[Band]:
+    if genre:
+        return[
+            Band(**b) for b in BANDS if b['genre'].lower() == genre.value
+        ]
+    return [Band(**b) for b in BANDS]
